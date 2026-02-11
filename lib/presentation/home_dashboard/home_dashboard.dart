@@ -21,10 +21,74 @@ class HomeDashboard extends StatefulWidget {
   const HomeDashboard({super.key});
 
   @override
-  State<HomeDashboard> createState() => _HomeDashboardState();
+  State<HomeDashboard> createState() {
+    return _HomeDashboardState();
+  }
 }
 
 class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateMixin {
+    // Add missing methods to resolve errors
+    void _checkLevelUp() {
+      // TODO: Implement level up logic
+    }
+
+    void _updateDerivedValues() {
+      // TODO: Implement derived value updates
+    }
+
+    // Move method definitions above their first use
+    String _formatCurrentDate() {
+      final now = DateTime.now();
+      final weekdays = [
+        'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+      ];
+      final months = [
+        'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+        'September', 'October', 'November', 'December'
+      ];
+      return '${weekdays[now.weekday - 1]}, ${months[now.month - 1]} ${now.day}';
+    }
+
+    String _getCurrentWeather() {
+      final hour = DateTime.now().hour;
+      if (hour >= 6 && hour < 12) {
+        return 'Sunny';
+      } else if (hour >= 12 && hour < 18) {
+        return 'Cloudy';
+      } else {
+        return 'Clear';
+      }
+    }
+
+    Future<void> _refreshHealthData() async {
+      HapticFeedback.mediumImpact();
+      await Future.delayed(const Duration(milliseconds: 1500));
+      if (mounted) {
+        setState(() {
+          int stepsIncrease = (DateTime.now().millisecond % 50);
+          _currentSteps += stepsIncrease;
+          _userXP += (stepsIncrease / 10).round();
+          _checkLevelUp();
+          _energyPoints = _currentSteps ~/ 100;
+          _distance = _currentSteps * 0.0005;
+            _calories = _currentSteps * 0.04; // Changed to double
+            _activeTime = _currentSteps * 0.01; // Changed to double
+        });
+        await _saveSteps();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Health data synced successfully!'),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+
+    void _onStepCountError(error) {
+      // TODO: Handle step count error
+    }
   String _userName = '';
   String _userAvatar = 'https://images.unsplash.com/photo-1705408115513-3ff15ef55a8d';
   int _userXP = 0;
@@ -44,7 +108,7 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
   StreamSubscription? _stepCountSubscription;
   StreamSubscription? _connectivitySubscription;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
-  Stream<int>? _stepCountStream;
+  Stream<StepCount>? _stepCountStream;
 
   @override
   void initState() {
@@ -70,17 +134,6 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
     super.dispose();
   }
 
-  // Duplicate methods removed. Only one definition for each method remains.
-      }
-
-      @override
-      Widget build(BuildContext context) {
-        // ...existing build method code...
-        return Scaffold(
-          appBar: AppBar(title: Text('Home Dashboard')),
-          body: Center(child: Text('Dashboard content here')),
-        );
-      }
 
   Future<void> _saveSteps() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -143,7 +196,7 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
       List<ConnectivityResult> results = await Connectivity().checkConnectivity();
       if (!results.contains(ConnectivityResult.none)) {
         _stepCountStream = Pedometer.stepCountStream;
-        _stepCountSubscription = _stepCountStream.listen(
+        _stepCountSubscription = _stepCountStream?.listen(
           _onStepCount,
           onError: _onStepCountError,
           cancelOnError: true,
@@ -163,7 +216,6 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
       int newSteps = event.steps - _initialSteps;
       int stepsGained = newSteps - _currentSteps;
       _currentSteps = newSteps;
-      // Add XP for steps (1 XP per 10 steps)
       if (stepsGained > 0) {
         _userXP += (stepsGained / 10).round();
         _checkLevelUp();
@@ -198,26 +250,19 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              // Greeting Header
               GreetingHeaderWidget(
                 userName: _userName,
                 currentDate: currentDate,
                 weatherCondition: weatherCondition,
               ),
-
               SizedBox(height: 2.h),
-
-              // Progress Ring
               ProgressRingWidget(
                 currentSteps: _currentSteps,
                 goalSteps: _goalSteps,
                 energyPoints: _energyPoints,
                 onLongPress: _showGoalAdjustment,
               ),
-
               SizedBox(height: 3.h),
-
-              // Trail Map
               TrailMapWidget(
                 currentTrail: 'Forest Trail',
                 progressPercentage:
@@ -227,35 +272,28 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
                     ? _goalSteps - _currentSteps
                     : 0,
               ),
-
               SizedBox(height: 3.h),
-
-              // Today's Achievements
               AchievementsCardWidget(
-                todayAchievements: _todayAchievements,
+                todayAchievements: List<Map<String, dynamic>>.from(_todayAchievements),
                 totalExperiencePoints: totalXP,
               ),
-
               SizedBox(height: 3.h),
-
-              // Quick Stats
               QuickStatsWidget(
                 distance: _distance,
-                calories: _calories,
-                activeTime: _activeTime,
+                calories: _calories.toInt(),
+                activeTime: _activeTime.toInt(),
               ),
-
-              SizedBox(height: 10.h), // Space for FAB
+              SizedBox(height: 10.h),
             ],
           ),
         ),
       ),
       floatingActionButton: !_healthPermissionsAvailable
           ? AnimatedBuilder(
-              animation: _fabAnimation,
+              animation: _fabAnimation!,
               builder: (context, child) {
                 return Transform.scale(
-                  scale: _fabAnimation.value,
+                  scale: _fabAnimation!.value,
                   child: FloatingActionButton.extended(
                     onPressed: _showStepEntryModal,
                     icon: CustomIconWidget(
@@ -284,84 +322,11 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
         currentIndex: 0,
         onTap: (index) {
           HapticFeedback.lightImpact();
-          // Navigation handled by CustomBottomBar
         },
       ),
     );
   }
 
-  String _formatCurrentDate() {
-    final now = DateTime.now();
-    final weekdays = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ];
-    final months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-
-    return '${weekdays[now.weekday - 1]}, ${months[now.month - 1]} ${now.day}';
-  }
-
-  String _getCurrentWeather() {
-    // Simulate weather based on time of day
-    final hour = DateTime.now().hour;
-    if (hour >= 6 && hour < 12) {
-      return 'Sunny';
-    } else if (hour >= 12 && hour < 18) {
-      return 'Cloudy';
-    } else {
-      return 'Clear';
-    }
-  }
-
-  Future<void> _refreshHealthData() async {
-    HapticFeedback.mediumImpact();
-
-    // Simulate data refresh
-    await Future.delayed(const Duration(milliseconds: 1500));
-
-    if (mounted) {
-      setState(() {
-        // Simulate slight increase in steps
-        int stepsIncrease = (DateTime.now().millisecond % 50);
-        _currentSteps += stepsIncrease;
-        _userXP += (stepsIncrease / 10).round();
-        _checkLevelUp();
-        _energyPoints = _currentSteps ~/ 100;
-        _distance = _currentSteps * 0.0005; // Rough conversion
-        _calories = (_currentSteps * 0.04).round();
-        _activeTime = (_currentSteps * 0.01).round();
-      });
-
-      await _saveSteps();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Health data synced successfully!'),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
-  }
 
   void _showGoalAdjustment() {
     final theme = Theme.of(context);
@@ -479,8 +444,8 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
             _checkLevelUp();
             _energyPoints = _currentSteps ~/ 100;
             _distance = _currentSteps * 0.0005;
-            _calories = (_currentSteps * 0.04).round();
-            _activeTime = (_currentSteps * 0.01).round();
+              _calories = _currentSteps * 0.04; // Changed to double
+              _activeTime = _currentSteps * 0.01; // Changed to double
           });
           await _saveSteps();
         },

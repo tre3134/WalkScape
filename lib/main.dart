@@ -12,7 +12,7 @@ void main() async {
   // Check if profile is created
   final prefs = await SharedPreferences.getInstance();
   final profileCreated = prefs.getBool('profile_created') ?? false;
-  final initialRoute = profileCreated ? AppRoutes.homeDashboard : AppRoutes.profileCreation;
+  final initialRoute = profileCreated ? homeDashboard : profileCreation;
 
   bool hasShownError = false;
 
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
         },
         // 🚨 END CRITICAL SECTION
         debugShowCheckedModeBanner: false,
-        routes: AppRoutes.routes,
+        routes: routes,
         initialRoute: initialRoute,
       );
     });

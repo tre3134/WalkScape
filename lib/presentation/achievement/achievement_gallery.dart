@@ -7,7 +7,7 @@ import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_icon_widget.dart';
 import './widgets/achievement_card.dart';
-import './widgets/achievement_detail_modal.dart';
+import './widgets/achievement_detail_modal.dart' hide SizedBox;
 import './widgets/achievement_filter_chips.dart';
 import './widgets/achievement_search_bar.dart';
 import './widgets/achievement_stats_header.dart';

@@ -252,6 +252,7 @@ class AchievementCard extends StatelessWidget {
               ),
             ),
         ],
+      ),
     );
   }
 
