@@ -27,84 +27,107 @@ class HomeDashboard extends StatefulWidget {
 class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateMixin {
       String _userAvatar = 'https://images.unsplash.com/photo-1705408115513-3ff15ef55a8d';
       bool _isPedometerAvailable = false;
-    void _updateDerivedValues() {
-      _energyPoints = _currentSteps ~/ 100;
-      _distance = _currentSteps * 0.0005; // rough estimate: 0.5 meters per step
-      _calories = (_currentSteps * 0.04).round(); // rough estimate
-      _activeTime = (_currentSteps * 0.01).round(); // rough estimate
-    }
+    // ...existing code...
+    import 'dart:async';
+    import 'package:flutter/material.dart';
 
-    void _onStepCountError(error) {
-      print('Pedometer error: $error');
-      setState(() {
-        _isPedometerAvailable = false;
-      });
-    }
-  void _checkLevelUp() {
-    // Example logic: Level up every 1000 XP
-    int xpForNextLevel = _userLevel * 1000;
-    while (_userXP >= xpForNextLevel) {
-      _userLevel++;
-      _userXP -= xpForNextLevel;
-      xpForNextLevel = _userLevel * 1000;
-      // Optionally show a level-up notification
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Level Up! You are now level $_userLevel!'),
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
-          ),
+    class _HomeDashboardState extends State<HomeDashboard> {
+      String _userName = '';
+      String _userAvatar = '';
+      int _userXP = 0;
+      int _userLevel = 1;
+      int _currentSteps = 0;
+      int _initialSteps = 0;
+      int _goalSteps = 10000;
+      int _energyPoints = 0;
+      double _distance = 0.0;
+      double _calories = 0.0;
+      double _activeTime = 0.0;
+      bool _healthPermissionsAvailable = false;
+      bool _isPedometerAvailable = false;
+      List<dynamic> _todayAchievements = [];
+      AnimationController? _fabAnimationController;
+      Animation<double>? _fabAnimation;
+      StreamSubscription? _stepCountSubscription;
+      StreamSubscription? _connectivitySubscription;
+      final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+      Stream<int>? _stepCountStream;
+
+      @override
+      void initState() {
+        super.initState();
+        _initialize();
+      }
+
+      Future<void> _initialize() async {
+        await _checkHealthPermissions();
+        await _loadSteps();
+        await _initConnectivity();
+        await _initPedometer();
+        _updateDerivedValues();
+      }
+
+      Future<void> _checkHealthPermissions() async {
+        setState(() {
+          _healthPermissionsAvailable = true;
+        });
+      }
+
+      Future<void> _loadSteps() async {
+        setState(() {
+          _currentSteps = 0;
+          _initialSteps = 0;
+        });
+      }
+
+      Future<void> _initConnectivity() async {
+        // Simulate connectivity initialization
+        setState(() {
+          // Example: set a flag or subscribe to connectivity changes
+        });
+      }
+
+      Future<void> _initPedometer() async {
+        setState(() {
+          _isPedometerAvailable = true;
+        });
+      }
+
+      void _updateDerivedValues() {
+        // Example: update distance, calories, etc. based on steps
+        setState(() {
+          _distance = _currentSteps * 0.0008; // Example conversion
+          _calories = _currentSteps * 0.04; // Example conversion
+          _activeTime = _currentSteps * 0.01; // Example conversion
+        });
+      }
+
+      void _onStepCountError(error) {
+        // Handle step count error
+        setState(() {
+          _isPedometerAvailable = false;
+        });
+      }
+
+      void _checkLevelUp() {
+        // Example: check if user XP is enough for level up
+        setState(() {
+          if (_userXP > 1000) {
+            _userLevel++;
+            _userXP = 0;
+          }
+        });
+      }
+
+      @override
+      Widget build(BuildContext context) {
+        // ...existing build method code...
+        return Scaffold(
+          appBar: AppBar(title: Text('Home Dashboard')),
+          body: Center(child: Text('Dashboard content here')),
         );
       }
     }
-  }
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
-
-  late AnimationController _fabAnimationController;
-  late Animation<double> _fabAnimation;
-
-  // Daily step data
-  int _currentSteps = 0;
-  final int _goalSteps = 10000;
-  int _energyPoints = 78;
-  double _distance = 3.92;
-  int _calories = 312;
-  int _activeTime = 87; // minutes
-  bool _healthPermissionsAvailable = false;
-
-  // User data
-  String _userName = 'Adventurer';
-  int _userLevel = 1;
-  int _userXP = 0;
-
-  // Pedometer variables
-  late Stream<StepCount> _stepCountStream;
-  StreamSubscription<StepCount>? _stepCountSubscription;
-  int _initialSteps = 0;
-
-  // Connectivity
-  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
-
-  final List<Map<String, dynamic>> _todayAchievements = [
-    {
-      'id': 1,
-      'title': 'Morning Walker',
-      'description': 'Completed 5,000 steps before noon',
-      'type': 'steps',
-      'xp': 50,
-      'time': '11:30 AM',
-      'earned_at': DateTime.now().subtract(const Duration(hours: 3)),
-    },
-    {
-      'id': 2,
-      'title': 'Distance Champion',
-      'description': 'Walked 3+ miles in a single session',
-      'type': 'distance',
-      'xp': 75,
-      'time': '2:15 PM',
       'earned_at': DateTime.now().subtract(const Duration(hours: 1)),
     },
     {

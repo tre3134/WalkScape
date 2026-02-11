@@ -7,7 +7,10 @@ import '../presentation/user/profile_creation_screen.dart';
 import '../presentation/social_leaderboard/social_leaderboard.dart';
 
 class AppRoutes {
-  // TODO: Add your routes here
+  // Home route
+  const String homeRoute = '/home';
+  // Profile route
+  const String profileRoute = '/profile';
   static const String initial = '/';
   static const String splash = '/splash-screen';
   static const String achievementGallery = '/achievement-gallery';
@@ -24,6 +27,7 @@ class AppRoutes {
     userProfile: (context) => const UserProfile(),
     profileCreation: (context) => const ProfileCreationScreen(),
     socialLeaderboard: (context) => const SocialLeaderboard(),
-    // TODO: Add your other routes here
+    // Settings route
+    const String settingsRoute = '/settings';
   };
 }

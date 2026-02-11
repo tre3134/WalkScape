@@ -218,51 +218,107 @@ class AchievementDetailModal extends StatelessWidget {
 
                   SizedBox(height: 3.h),
 
-                  // Description
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(4.w),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Text(
-                      achievement['description'] as String,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                        height: 1.5,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                  // Directives must appear before any declarations
+                  import 'package:flutter/material.dart';
+                  import 'package:intl/intl.dart';
+                  import '../../../core/app_export.dart';
+                  import '../models/achievement.dart';
 
-                  SizedBox(height: 3.h),
+                  class AchievementDetailModal extends StatelessWidget {
+                    final Achievement achievement;
+                    final VoidCallback onClose;
+                    final VoidCallback onShare;
+                    final bool isUnlocked;
+                    final DateTime? unlockedDate;
 
-                  // Progress or Statistics
-                  if (!isEarned && progress > 0) ...[
-                    _buildProgressSection(context, progress),
-                    SizedBox(height: 3.h),
-                  ] else if (!isEarned) ...[
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 1.h),
-                      child: Text(
-                        getMotivationalMessage(achievement['category'] as String),
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.8),
-                          fontWeight: FontWeight.w600,
+                    const AchievementDetailModal({
+                      Key? key,
+                      required this.achievement,
+                      required this.onClose,
+                      required this.onShare,
+                      required this.isUnlocked,
+                      this.unlockedDate,
+                    }) : super(key: key);
+
+                    Color _getCategoryColor(String category) {
+                      // ...existing code...
+                      switch (category) {
+                        case 'Health':
+                          return Colors.green;
+                        case 'Social':
+                          return Colors.blue;
+                        case 'Adventure':
+                          return Colors.orange;
+                        default:
+                          return Colors.grey;
+                      }
+                    }
+
+                    Color _getRarityColor(String rarity) {
+                      switch (rarity) {
+                        case 'Common':
+                          return Colors.grey;
+                        case 'Rare':
+                          return Colors.blueAccent;
+                        case 'Epic':
+                          return Colors.purple;
+                        case 'Legendary':
+                          return Colors.amber;
+                        default:
+                          return Colors.grey;
+                      }
+                    }
+
+                    Widget _buildProgressSection() {
+                      // ...existing code...
+                      return Container();
+                    }
+
+                    Widget _buildStatisticsSection() {
+                      // ...existing code...
+                      return Container();
+                    }
+
+                    String _formatFullDate(DateTime date) {
+                      return DateFormat('MMMM d, yyyy').format(date);
+                    }
+
+                    Widget _buildStatRow(String label, String value) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(label),
+                          Text(value),
+                        ],
+                      );
+                    }
+
+                    void _shareAchievement() {
+                      onShare();
+                    }
+
+                    @override
+                    Widget build(BuildContext context) {
+                      // ...existing code for build method...
+                      return Dialog(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(achievement.title),
+                            // ...other UI elements...
+                            ElevatedButton(
+                              onPressed: _shareAchievement,
+                              child: Text('Share'),
+                            ),
+                            ElevatedButton(
+                              onPressed: onClose,
+                              child: Text('Close'),
+                            ),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ] else if (isEarned) ...[
-                    _buildStatisticsSection(context),
-                    SizedBox(height: 3.h),
-                  ],
-
+                      );
+                    }
+                  }
                   // Action Buttons
                   if (isEarned) ...[
                     Row(
