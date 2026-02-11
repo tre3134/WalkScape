@@ -1,77 +1,42 @@
-  String getAchievementEmoji(String category) {
-    switch (category.toLowerCase()) {
-      case 'steps':
-        return '👣';
-      case 'streaks':
-        return '🔥';
-      case 'trails':
-        return '⛰️';
-      case 'social':
-        return '🤝';
-      case 'events':
-        return '🎊';
-      default:
-        return '🏅';
-    }
-  }
 
-  String getMotivationalMessage(String category) {
-    switch (category.toLowerCase()) {
-      case 'steps':
-      import 'package:flutter/material.dart';
-      import 'package:flutter/services.dart';
-      import 'package:sizer/sizer.dart';
-      import '../../../core/app_export.dart';
-        return 'Every step counts! Keep moving!';
-      String getAchievementEmoji(String category) {
-        switch (category.toLowerCase()) {
-          case 'steps':
-            return '👣';
-          case 'streaks':
-            return '🔥';
-          case 'trails':
-            return '⛰️';
-          case 'social':
-            return '🤝';
-          case 'events':
-            return '🎊';
-          default:
-            return '🏅';
-        }
-      }
-      case 'streaks':
-      String getMotivationalMessage(String category) {
-        switch (category.toLowerCase()) {
-          case 'steps':
-            return 'Every step counts! Keep moving!';
-          case 'streaks':
-            return 'Keep your streak alive!';
-          case 'trails':
-            return 'Adventure awaits on the trail!';
-          case 'social':
-            return 'Invite friends for more fun!';
-          case 'events':
-            return 'Special event, special you!';
-          default:
-            return 'You are closer than you think!';
-        }
-      }
-        return 'Keep your streak alive!';
-      case 'trails':
-        return 'Adventure awaits on the trail!';
-      case 'social':
-        return 'Invite friends for more fun!';
-      case 'events':
-        return 'Special event, special you!';
-      default:
-        return 'You are closer than you think!';
-    }
-  }
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../core/app_export.dart';
+
+String getAchievementEmoji(String category) {
+  switch (category.toLowerCase()) {
+    case 'steps':
+      return '👣';
+    case 'streaks':
+      return '🔥';
+    case 'trails':
+      return '⛰️';
+    case 'social':
+      return '🤝';
+    case 'events':
+      return '🎊';
+    default:
+      return '🏅';
+  }
+}
+
+String getMotivationalMessage(String category) {
+  switch (category.toLowerCase()) {
+    case 'steps':
+      return 'Every step counts! Keep moving!';
+    case 'streaks':
+      return 'Keep your streak alive!';
+    case 'trails':
+      return 'Adventure awaits on the trail!';
+    case 'social':
+      return 'Invite friends for more fun!';
+    case 'events':
+      return 'Special event, special you!';
+    default:
+      return 'You are closer than you think!';
+  }
+}
 
 class AchievementCard extends StatelessWidget {
   final Map<String, dynamic> achievement;
@@ -111,8 +76,8 @@ class AchievementCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(
                 color: isEarned
-                    ? theme.colorScheme.primary.withValues(alpha: 0.3)
-                    : theme.colorScheme.outline.withValues(alpha: 0.2),
+                  ? theme.colorScheme.primary.withOpacity(0.3)
+                  : theme.colorScheme.outline.withOpacity(0.2),
                 width: isEarned ? 2.0 : 1.0,
               ),
             ),
@@ -125,8 +90,8 @@ class AchievementCard extends StatelessWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          theme.colorScheme.primary.withValues(alpha: 0.05),
-                          theme.colorScheme.secondary.withValues(alpha: 0.05),
+                          theme.colorScheme.primary.withOpacity(0.05),
+                          theme.colorScheme.secondary.withOpacity(0.05),
                         ],
                       )
                     : null,
@@ -146,9 +111,9 @@ class AchievementCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isEarned
-                            ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                            : theme.colorScheme.onSurface
-                                .withValues(alpha: 0.1),
+                          ? theme.colorScheme.primary.withOpacity(0.1)
+                          : theme.colorScheme.onSurface
+                            .withOpacity(0.1),
                       ),
                       child: isEarned
                           ? CustomImageWidget(
@@ -162,8 +127,8 @@ class AchievementCard extends StatelessWidget {
                           : CustomIconWidget(
                               iconName: 'lock_outline',
                               size: 8.w,
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.4),
+                                color: theme.colorScheme.onSurface
+                                  .withOpacity(0.4),
                             ),
                     ),
                     if (!isEarned && progress > 0)
@@ -219,9 +184,9 @@ class AchievementCard extends StatelessWidget {
                         achievement['title'] as String,
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: isEarned
+                            color: isEarned
                               ? theme.colorScheme.onSurface
-                              : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                              : theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
                         textAlign: TextAlign.center,
                         maxLines: 2,
@@ -236,9 +201,9 @@ class AchievementCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
                 decoration: BoxDecoration(
-                  color: _getCategoryColor(
-                          achievement['category'] as String, theme)
-                      .withValues(alpha: 0.1),
+                    color: _getCategoryColor(
+                        achievement['category'] as String, theme)
+                      .withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -256,7 +221,7 @@ class AchievementCard extends StatelessWidget {
                 Text(
                   'Unlocked ${_formatDate(achievement['unlockedDate'] as DateTime)}',
                   style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
                   ),
                 ),
               ] else if (!isEarned) ...[
@@ -264,7 +229,7 @@ class AchievementCard extends StatelessWidget {
                 Text(
                   getMotivationalMessage(achievement['category'] as String),
                   style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                    color: theme.colorScheme.primary.withOpacity(0.7),
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
@@ -287,39 +252,6 @@ class AchievementCard extends StatelessWidget {
               ),
             ),
         ],
-      String _getAchievementEmoji(String category) {
-        switch (category.toLowerCase()) {
-          case 'steps':
-            return '👣';
-          case 'streaks':
-            return '🔥';
-          case 'trails':
-            return '⛰️';
-          case 'social':
-            return '🤝';
-          case 'events':
-            return '🎊';
-          default:
-            return '🏅';
-        }
-      }
-
-      String _getMotivationalMessage(String category) {
-        switch (category.toLowerCase()) {
-          case 'steps':
-            return 'Every step counts! Keep moving!';
-          case 'streaks':
-            return 'Keep your streak alive!';
-          case 'trails':
-            return 'Adventure awaits on the trail!';
-          case 'social':
-            return 'Invite friends for more fun!';
-          case 'events':
-            return 'Special event, special you!';
-          default:
-            return 'You are closer than you think!';
-        }
-      }
     );
   }
 

@@ -1,41 +1,42 @@
-  String getAchievementEmoji(String category) {
-    switch (category.toLowerCase()) {
-      case 'steps':
-        return '👣';
-      case 'streaks':
-        return '🔥';
-      case 'trails':
-        return '⛰️';
-      case 'social':
-        return '🤝';
-      case 'events':
-        return '🎊';
-      default:
-        return '🏅';
-    }
-  }
 
-  String getMotivationalMessage(String category) {
-    switch (category.toLowerCase()) {
-      case 'steps':
-        return 'Every step brings you closer!';
-      case 'streaks':
-        return 'Keep your streak alive!';
-      case 'trails':
-        return 'Adventure is just ahead!';
-      case 'social':
-        return 'Invite friends for more fun!';
-      case 'events':
-        return 'Special event, special you!';
-      default:
-        return 'You are closer than you think!';
-    }
-  }
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../core/app_export.dart';
+
+String getAchievementEmoji(String category) {
+  switch (category.toLowerCase()) {
+    case 'steps':
+      return '👣';
+    case 'streaks':
+      return '🔥';
+    case 'trails':
+      return '⛰️';
+    case 'social':
+      return '🤝';
+    case 'events':
+      return '🎊';
+    default:
+      return '🏅';
+  }
+}
+
+String getMotivationalMessage(String category) {
+  switch (category.toLowerCase()) {
+    case 'steps':
+      return 'Every step brings you closer!';
+    case 'streaks':
+      return 'Keep your streak alive!';
+    case 'trails':
+      return 'Adventure is just ahead!';
+    case 'social':
+      return 'Invite friends for more fun!';
+    case 'events':
+      return 'Special event, special you!';
+    default:
+      return 'You are closer than you think!';
+  }
+}
 
 class AchievementDetailModal extends StatelessWidget {
   final Map<String, dynamic> achievement;
@@ -218,26 +219,7 @@ class AchievementDetailModal extends StatelessWidget {
 
                   SizedBox(height: 3.h),
 
-                  // Directives must appear before any declarations
-                  import 'package:flutter/material.dart';
-                  import 'package:intl/intl.dart';
-                  import '../../../core/app_export.dart';
-                  import '../models/achievement.dart';
-
-                  class AchievementDetailModal extends StatelessWidget {
-                    final Achievement achievement;
-                    final VoidCallback onClose;
-                    final VoidCallback onShare;
-                    final bool isUnlocked;
-                    final DateTime? unlockedDate;
-
-                    const AchievementDetailModal({
-                      Key? key,
-                      required this.achievement,
-                      required this.onClose,
-                      required this.onShare,
-                      required this.isUnlocked,
-                      this.unlockedDate,
+                  // ...existing code continues...
                     }) : super(key: key);
 
                     Color _getCategoryColor(String category) {

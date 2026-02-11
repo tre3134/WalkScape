@@ -22,101 +22,54 @@ class HomeDashboard extends StatefulWidget {
 
   @override
   State<HomeDashboard> createState() => _HomeDashboardState();
-}
 
 class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateMixin {
-      String _userAvatar = 'https://images.unsplash.com/photo-1705408115513-3ff15ef55a8d';
-      bool _isPedometerAvailable = false;
-    // ...existing code...
-    import 'dart:async';
-    import 'package:flutter/material.dart';
+  String _userName = '';
+  String _userAvatar = 'https://images.unsplash.com/photo-1705408115513-3ff15ef55a8d';
+  int _userXP = 0;
+  int _userLevel = 1;
+  int _currentSteps = 0;
+  int _initialSteps = 0;
+  int _goalSteps = 10000;
+  int _energyPoints = 0;
+  double _distance = 0.0;
+  double _calories = 0.0;
+  double _activeTime = 0.0;
+  bool _healthPermissionsAvailable = false;
+  bool _isPedometerAvailable = false;
+  List<dynamic> _todayAchievements = [];
+  AnimationController? _fabAnimationController;
+  Animation<double>? _fabAnimation;
+  StreamSubscription? _stepCountSubscription;
+  StreamSubscription? _connectivitySubscription;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  Stream<int>? _stepCountStream;
 
-    class _HomeDashboardState extends State<HomeDashboard> {
-      String _userName = '';
-      String _userAvatar = '';
-      int _userXP = 0;
-      int _userLevel = 1;
-      int _currentSteps = 0;
-      int _initialSteps = 0;
-      int _goalSteps = 10000;
-      int _energyPoints = 0;
-      double _distance = 0.0;
-      double _calories = 0.0;
-      double _activeTime = 0.0;
-      bool _healthPermissionsAvailable = false;
-      bool _isPedometerAvailable = false;
-      List<dynamic> _todayAchievements = [];
-      AnimationController? _fabAnimationController;
-      Animation<double>? _fabAnimation;
-      StreamSubscription? _stepCountSubscription;
-      StreamSubscription? _connectivitySubscription;
-      final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
-      Stream<int>? _stepCountStream;
+  @override
+  void initState() {
+    super.initState();
+    _fabAnimationController = AnimationController(
+      vsync: this,
+    );
+    _fabAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _fabAnimationController!,
+      curve: Curves.easeInOut,
+    ));
+    _fabAnimationController!.forward();
+  }
 
-      @override
-      void initState() {
-        super.initState();
-        _initialize();
-      }
+  @override
+  void dispose() {
+    _fabAnimationController?.dispose();
+    _stepCountSubscription?.cancel();
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
 
-      Future<void> _initialize() async {
-        await _checkHealthPermissions();
-        await _loadSteps();
-        await _initConnectivity();
-        await _initPedometer();
-        _updateDerivedValues();
-      }
-
-      Future<void> _checkHealthPermissions() async {
-        setState(() {
-          _healthPermissionsAvailable = true;
-        });
-      }
-
-      Future<void> _loadSteps() async {
-        setState(() {
-          _currentSteps = 0;
-          _initialSteps = 0;
-        });
-      }
-
-      Future<void> _initConnectivity() async {
-        // Simulate connectivity initialization
-        setState(() {
-          // Example: set a flag or subscribe to connectivity changes
-        });
-      }
-
-      Future<void> _initPedometer() async {
-        setState(() {
-          _isPedometerAvailable = true;
-        });
-      }
-
-      void _updateDerivedValues() {
-        // Example: update distance, calories, etc. based on steps
-        setState(() {
-          _distance = _currentSteps * 0.0008; // Example conversion
-          _calories = _currentSteps * 0.04; // Example conversion
-          _activeTime = _currentSteps * 0.01; // Example conversion
-        });
-      }
-
-      void _onStepCountError(error) {
-        // Handle step count error
-        setState(() {
-          _isPedometerAvailable = false;
-        });
-      }
-
-      void _checkLevelUp() {
-        // Example: check if user XP is enough for level up
-        setState(() {
-          if (_userXP > 1000) {
-            _userLevel++;
-            _userXP = 0;
-          }
-        });
+  // Duplicate methods removed. Only one definition for each method remains.
       }
 
       @override
@@ -127,77 +80,6 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
           body: Center(child: Text('Dashboard content here')),
         );
       }
-    }
-      'earned_at': DateTime.now().subtract(const Duration(hours: 1)),
-    },
-    {
-      'id': 3,
-      'title': 'Streak Master',
-      'description': '7-day walking streak maintained',
-      'type': 'streak',
-      'xp': 100,
-      'time': '6:00 PM',
-      'earned_at': DateTime.now().subtract(const Duration(minutes: 30)),
-    },
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _fabAnimationController = AnimationController(
-       // _isPedometerAvailable removed
-      vsync: this,
-    );
-    _fabAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fabAnimationController,
-      curve: Curves.easeInOut,
-    ));
-
-    _fabAnimationController.forward();
-    _initialize();
-  }
-
-             // _isPedometerAvailable removed
-    await _checkHealthPermissions();
-    _loadSteps();
-    _initConnectivity();
-    _initPedometer();
-  }
-
-  @override
-  void dispose() {
-    _fabAnimationController.dispose();
-    _stepCountSubscription?.cancel();
-    _connectivitySubscription.cancel();
-    super.dispose();
-  }
-
-  Future<void> _loadSteps() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lastDate = prefs.getString('lastDate') ?? '';
-    String today = DateTime.now().toIso8601String().split('T')[0];
-    if (lastDate != today) {
-      // New day, reset steps
-      _currentSteps = 0;
-      _initialSteps = 0;
-      await prefs.setString('lastDate', today);
-      await prefs.setInt('currentSteps', 0);
-      await prefs.setInt('initialSteps', 0);
-    } else {
-      _currentSteps = prefs.getInt('currentSteps') ?? 0;
-      _initialSteps = prefs.getInt('initialSteps') ?? 0;
-    }
-
-    // Load user data
-    _userName = prefs.getString('user_name') ?? 'Adventurer';
-    _userAvatar = prefs.getString('user_avatar') ?? 'https://images.unsplash.com/photo-1705408115513-3ff15ef55a8d';
-    _userXP = prefs.getInt('user_xp') ?? 0;
-
-    _updateDerivedValues();
-  }
 
   Future<void> _saveSteps() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
