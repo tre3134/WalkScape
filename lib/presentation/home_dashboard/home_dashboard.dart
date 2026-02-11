@@ -27,7 +27,7 @@ class HomeDashboard extends StatefulWidget {
 class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateMixin {
     // Add missing methods to resolve errors
     void _checkLevelUp() {
-      // TODO: Implement level up logic
+      // Level up logic placeholder
     }
 
     // Move method definitions above their first use
@@ -65,10 +65,11 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
           _checkLevelUp();
           _energyPoints = _currentSteps ~/ 100;
           _distance = _currentSteps * 0.0005;
-            _calories = _currentSteps * 0.04; // Changed to double
-            _activeTime = _currentSteps * 0.01; // Changed to double
+          _calories = _currentSteps * 0.04; // Changed to double
+          _activeTime = _currentSteps * 0.01; // Changed to double
         });
         await _saveSteps();
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Health data synced successfully!'),

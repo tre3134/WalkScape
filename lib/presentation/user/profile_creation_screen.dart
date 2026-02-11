@@ -229,7 +229,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
                                   width: double.infinity,
                                   height: 20.w,
                                   decoration: BoxDecoration(
-                                    color: theme.colorScheme.primary.withValues(alpha: (0.3 * 255).toInt()),
+                                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(9),
                                   ),
                                   child: Icon(
