@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/app_export.dart';
 import '../../widgets/custom_app_bar.dart';
+import '../../core/user_database.dart';
 
 class ProfileCreationScreen extends StatefulWidget {
   const ProfileCreationScreen({super.key});
@@ -14,6 +15,7 @@ class ProfileCreationScreen extends StatefulWidget {
 }
 
 class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
+  late UserDatabase _userDb;
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -56,6 +58,13 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
   ];
 
   @override
+  @override
+  void initState() {
+    super.initState();
+    _userDb = UserDatabase('user_db.json');
+  }
+
+  @override
   void dispose() {
     _usernameController.dispose();
     _emailController.dispose();
@@ -68,12 +77,31 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
 
     setState(() => _isLoading = true);
 
+    final username = _usernameController.text.trim();
+    final email = _emailController.text.trim();
+    final name = _nameController.text.trim();
+
+    // Check for unique username/email
+    if (_userDb.usernameOrEmailExists(username, email)) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Username or email already in use.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      await prefs.setString('user_username', _usernameController.text.trim());
-      await prefs.setString('user_email', _emailController.text.trim());
-      await prefs.setString('user_name', _nameController.text.trim());
+      // Add to user database
+      _userDb.addUser(username, email, '');
+
+      await prefs.setString('user_username', username);
+      await prefs.setString('user_email', email);
+      await prefs.setString('user_name', name);
       await prefs.setString('user_avatar', _selectedAvatar);
       await prefs.setBool('profile_created', true);
       await prefs.setInt('user_level', 1);

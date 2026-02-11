@@ -25,6 +25,8 @@ class HomeDashboard extends StatefulWidget {
 }
 
 class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateMixin {
+      String _userAvatar = 'https://images.unsplash.com/photo-1705408115513-3ff15ef55a8d';
+      bool _isPedometerAvailable = false;
     void _updateDerivedValues() {
       _energyPoints = _currentSteps ~/ 100;
       _distance = _currentSteps * 0.0005; // rough estimate: 0.5 meters per step
@@ -75,7 +77,6 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
 
   // User data
   String _userName = 'Adventurer';
-  String _userAvatar = 'https://images.unsplash.com/photo-1705408115513-3ff15ef55a8d';
   int _userLevel = 1;
   int _userXP = 0;
 
@@ -83,7 +84,6 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
   late Stream<StepCount> _stepCountStream;
   StreamSubscription<StepCount>? _stepCountSubscription;
   int _initialSteps = 0;
-  bool _isPedometerAvailable = false;
 
   // Connectivity
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
@@ -122,7 +122,7 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
   void initState() {
     super.initState();
     _fabAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+       // _isPedometerAvailable removed
       vsync: this,
     );
     _fabAnimation = Tween<double>(
@@ -137,7 +137,7 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
     _initialize();
   }
 
-  void _initialize() async {
+             // _isPedometerAvailable removed
     await _checkHealthPermissions();
     _loadSteps();
     _initConnectivity();
@@ -171,7 +171,6 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
     // Load user data
     _userName = prefs.getString('user_name') ?? 'Adventurer';
     _userAvatar = prefs.getString('user_avatar') ?? 'https://images.unsplash.com/photo-1705408115513-3ff15ef55a8d';
-    _userLevel = prefs.getInt('user_level') ?? 1;
     _userXP = prefs.getInt('user_xp') ?? 0;
 
     _updateDerivedValues();

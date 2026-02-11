@@ -1,3 +1,36 @@
+  String getAchievementEmoji(String category) {
+    switch (category.toLowerCase()) {
+      case 'steps':
+        return '👣';
+      case 'streaks':
+        return '🔥';
+      case 'trails':
+        return '⛰️';
+      case 'social':
+        return '🤝';
+      case 'events':
+        return '🎊';
+      default:
+        return '🏅';
+    }
+  }
+
+  String getMotivationalMessage(String category) {
+    switch (category.toLowerCase()) {
+      case 'steps':
+        return 'Every step brings you closer!';
+      case 'streaks':
+        return 'Keep your streak alive!';
+      case 'trails':
+        return 'Adventure is just ahead!';
+      case 'social':
+        return 'Invite friends for more fun!';
+      case 'events':
+        return 'Special event, special you!';
+      default:
+        return 'You are closer than you think!';
+    }
+  }
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
@@ -18,32 +51,35 @@ class AchievementDetailModal extends StatelessWidget {
     final isEarned = achievement['isEarned'] as bool;
     final progress = achievement['progress'] as double? ?? 0.0;
 
-    return Container(
-      height: 70.h,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: Column(
-        children: [
-          // Handle bar
-          Container(
-            margin: EdgeInsets.only(top: 1.h),
-            width: 10.w,
-            height: 0.5.h,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.outline.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(2),
-            ),
+    final emoji = getAchievementEmoji(achievement['category'] as String);
+    return Stack(
+      children: [
+        Container(
+          height: 70.h,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                margin: EdgeInsets.only(top: 1.h),
+                width: 10.w,
+                height: 0.5.h,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
 
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(6.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Large Badge Display
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(6.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                  // Large Badge Display with emoji
                   Container(
                     width: 30.w,
                     height: 30.w,
@@ -54,10 +90,8 @@ class AchievementDetailModal extends StatelessWidget {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                theme.colorScheme.primary
-                                    .withValues(alpha: 0.2),
-                                theme.colorScheme.secondary
-                                    .withValues(alpha: 0.2),
+                                theme.colorScheme.primary.withValues(alpha: 0.2),
+                                theme.colorScheme.secondary.withValues(alpha: 0.2),
                               ],
                             )
                           : null,
@@ -66,34 +100,60 @@ class AchievementDetailModal extends StatelessWidget {
                           : null,
                     ),
                     child: isEarned
-                        ? CustomImageWidget(
-                            imageUrl: achievement['badgeImage'] as String,
-                            width: 25.w,
-                            height: 25.w,
-                            fit: BoxFit.contain,
-                            semanticLabel:
-                                achievement['semanticLabel'] as String,
+                        ? Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CustomImageWidget(
+                                imageUrl: achievement['badgeImage'] as String,
+                                width: 25.w,
+                                height: 25.w,
+                                fit: BoxFit.contain,
+                                semanticLabel: achievement['semanticLabel'] as String,
+                              ),
+                              if ((achievement['justUnlocked'] ?? false))
+                                Positioned(
+                                  child: Text('🎉', style: TextStyle(fontSize: 40)),
+                                ),
+                            ],
                           )
-                        : CustomIconWidget(
-                            iconName: 'lock_outline',
-                            size: 15.w,
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.4),
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomIconWidget(
+                                iconName: 'lock_outline',
+                                size: 15.w,
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                              ),
+                              SizedBox(height: 1.h),
+                              Text(
+                                emoji,
+                                style: TextStyle(fontSize: 28),
+                              ),
+                            ],
                           ),
                   ),
 
                   SizedBox(height: 3.h),
 
-                  // Achievement Title
-                  Text(
-                    achievement['title'] as String,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: isEarned
-                          ? theme.colorScheme.onSurface
-                          : theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                    ),
-                    textAlign: TextAlign.center,
+                  // Achievement Title with emoji
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(emoji, style: TextStyle(fontSize: 22)),
+                      SizedBox(width: 1.w),
+                      Flexible(
+                        child: Text(
+                          achievement['title'] as String,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: isEarned
+                                ? theme.colorScheme.onSurface
+                                : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
 
                   SizedBox(height: 1.h),
@@ -186,6 +246,18 @@ class AchievementDetailModal extends StatelessWidget {
                   if (!isEarned && progress > 0) ...[
                     _buildProgressSection(context, progress),
                     SizedBox(height: 3.h),
+                  ] else if (!isEarned) ...[
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 1.h),
+                      child: Text(
+                        getMotivationalMessage(achievement['category'] as String),
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.8),
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ] else if (isEarned) ...[
                     _buildStatisticsSection(context),
                     SizedBox(height: 3.h),
@@ -244,8 +316,18 @@ class AchievementDetailModal extends StatelessWidget {
           ),
         ],
       ),
+        ),
+        // Confetti overlay for newly unlocked achievement
+        if (isEarned && (achievement['justUnlocked'] ?? false))
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Center(
+                child: Text('🎊', style: TextStyle(fontSize: 60)),
+              ),
+            ),
+          ),
+      ],
     );
-  }
 
   Widget _buildProgressSection(BuildContext context, double progress) {
     final theme = Theme.of(context);
