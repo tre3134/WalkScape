@@ -80,18 +80,18 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
       }
     }
 
-  String _userName = '';
+  final String _userName = '';
   int _userXP = 0;
-  int _userLevel = 1;
+  final int _userLevel = 1;
   int _currentSteps = 0;
-  int _initialSteps = 0;
-  int _goalSteps = 10000;
+  final int _initialSteps = 0;
+  final int _goalSteps = 10000;
   int _energyPoints = 0;
   double _distance = 0.0;
   double _calories = 0.0;
   double _activeTime = 0.0;
-  bool _healthPermissionsAvailable = false;
-  List<dynamic> _todayAchievements = [];
+  final bool _healthPermissionsAvailable = false;
+  final List<dynamic> _todayAchievements = [];
   AnimationController? _fabAnimationController;
   Animation<double>? _fabAnimation;
   StreamSubscription? _stepCountSubscription;

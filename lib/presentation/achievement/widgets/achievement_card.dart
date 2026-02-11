@@ -76,8 +76,8 @@ class AchievementCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(
                 color: isEarned
-                  ? theme.colorScheme.primary.withOpacity(0.3)
-                  : theme.colorScheme.outline.withOpacity(0.2),
+                  ? theme.colorScheme.primary.withValues(alpha: (0.3 * 255).toInt())
+                  : theme.colorScheme.outline.withValues(alpha: (0.2 * 255).toInt()),
                 width: isEarned ? 2.0 : 1.0,
               ),
             ),
@@ -90,8 +90,8 @@ class AchievementCard extends StatelessWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          theme.colorScheme.primary.withOpacity(0.05),
-                          theme.colorScheme.secondary.withOpacity(0.05),
+                          theme.colorScheme.primary.withValues(alpha: (0.05 * 255).toInt()),
+                          theme.colorScheme.secondary.withValues(alpha: (0.05 * 255).toInt()),
                         ],
                       )
                     : null,
@@ -111,9 +111,9 @@ class AchievementCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isEarned
-                          ? theme.colorScheme.primary.withOpacity(0.1)
+                          ? theme.colorScheme.primary.withValues(alpha: (0.1 * 255).toInt())
                           : theme.colorScheme.onSurface
-                            .withOpacity(0.1),
+                            .withValues(alpha: (0.1 * 255).toInt()),
                       ),
                       child: isEarned
                           ? CustomImageWidget(
@@ -128,7 +128,7 @@ class AchievementCard extends StatelessWidget {
                               iconName: 'lock_outline',
                               size: 8.w,
                                 color: theme.colorScheme.onSurface
-                                  .withOpacity(0.4),
+                                  .withValues(alpha: (0.4 * 255).toInt()),
                             ),
                     ),
                     if (!isEarned && progress > 0)
@@ -141,7 +141,7 @@ class AchievementCard extends StatelessWidget {
                           height: 0.7.h,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2),
-                            color: theme.colorScheme.primary.withOpacity(0.7),
+                            color: theme.colorScheme.primary.withValues(alpha: (0.7 * 255).toInt()),
                           ),
                         ),
                       ),
@@ -186,7 +186,7 @@ class AchievementCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                             color: isEarned
                               ? theme.colorScheme.onSurface
-                              : theme.colorScheme.onSurface.withOpacity(0.6),
+                              : theme.colorScheme.onSurface.withValues(alpha: (0.6 * 255).toInt()),
                         ),
                         textAlign: TextAlign.center,
                         maxLines: 2,
@@ -203,7 +203,7 @@ class AchievementCard extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: _getCategoryColor(
                         achievement['category'] as String, theme)
-                      .withOpacity(0.1),
+                      .withValues(alpha: (0.1 * 255).toInt()),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -221,7 +221,7 @@ class AchievementCard extends StatelessWidget {
                 Text(
                   'Unlocked ${_formatDate(achievement['unlockedDate'] as DateTime)}',
                   style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: (0.6 * 255).toInt()),
                   ),
                 ),
               ] else if (!isEarned) ...[
@@ -229,7 +229,7 @@ class AchievementCard extends StatelessWidget {
                 Text(
                   getMotivationalMessage(achievement['category'] as String),
                   style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.primary.withOpacity(0.7),
+                    color: theme.colorScheme.primary.withValues(alpha: (0.7 * 255).toInt()),
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,

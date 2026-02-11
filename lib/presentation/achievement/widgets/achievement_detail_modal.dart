@@ -100,7 +100,7 @@ class AchievementDetailModal extends StatelessWidget {
           Text(
             label,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: (0.7 * 255).toInt()),
             ),
           ),
           Text(
@@ -120,7 +120,7 @@ class AchievementDetailModal extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withOpacity(0.05),
+        color: theme.colorScheme.primary.withValues(alpha: (0.05 * 255).toInt()),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -134,7 +134,7 @@ class AchievementDetailModal extends StatelessWidget {
           SizedBox(height: 2.h),
           LinearProgressIndicator(
             value: progress,
-            backgroundColor: theme.colorScheme.outline.withOpacity(0.2),
+            backgroundColor: theme.colorScheme.outline.withValues(alpha: (0.2 * 255).toInt()),
             valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
             minHeight: 1.h,
           ),
@@ -151,7 +151,7 @@ class AchievementDetailModal extends StatelessWidget {
             Text(
               achievement['requirement'] as String,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: (0.6 * 255).toInt()),
               ),
               textAlign: TextAlign.center,
             ),
@@ -168,7 +168,7 @@ class AchievementDetailModal extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: theme.colorScheme.secondary.withOpacity(0.05),
+        color: theme.colorScheme.secondary.withValues(alpha: (0.05 * 255).toInt()),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -225,7 +225,7 @@ class AchievementDetailModal extends StatelessWidget {
                 width: 10.w,
                 height: 0.5.h,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.outline.withOpacity(0.3),
+                  color: theme.colorScheme.outline.withValues(alpha: (0.3 * 255).toInt()),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -246,13 +246,13 @@ class AchievementDetailModal extends StatelessWidget {
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    theme.colorScheme.primary.withOpacity(0.2),
-                                    theme.colorScheme.secondary.withOpacity(0.2),
+                                    theme.colorScheme.primary.withValues(alpha: (0.2 * 255).toInt()),
+                                    theme.colorScheme.secondary.withValues(alpha: (0.2 * 255).toInt()),
                                   ],
                                 )
                               : null,
                           color: !isEarned
-                              ? theme.colorScheme.onSurface.withOpacity(0.1)
+                              ? theme.colorScheme.onSurface.withValues(alpha: (0.1 * 255).toInt())
                               : null,
                         ),
                         child: isEarned
@@ -278,7 +278,7 @@ class AchievementDetailModal extends StatelessWidget {
                                   CustomIconWidget(
                                     iconName: 'lock_outline',
                                     size: 15.w,
-                                    color: theme.colorScheme.onSurface.withOpacity(0.4),
+                                    color: theme.colorScheme.onSurface.withValues(alpha: (0.4 * 255).toInt()),
                                   ),
                                   SizedBox(height: 1.h),
                                   Text(
@@ -302,7 +302,7 @@ class AchievementDetailModal extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                                 color: isEarned
                                     ? theme.colorScheme.onSurface
-                                    : theme.colorScheme.onSurface.withOpacity(0.7),
+                                    : theme.colorScheme.onSurface.withValues(alpha: (0.7 * 255).toInt()),
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -320,7 +320,7 @@ class AchievementDetailModal extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: _getCategoryColor(
                                       achievement['category'] as String, theme)
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: (0.1 * 255).toInt()),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Text(
@@ -340,7 +340,7 @@ class AchievementDetailModal extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: _getRarityColor(
                                         achievement['rarity'] as String, theme)
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: (0.1 * 255).toInt()),
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: Row(
