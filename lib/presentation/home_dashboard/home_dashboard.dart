@@ -4,8 +4,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:sizer/sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pedometer/pedometer.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../core/app_export.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -30,10 +28,6 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
     // Add missing methods to resolve errors
     void _checkLevelUp() {
       // TODO: Implement level up logic
-    }
-
-    void _updateDerivedValues() {
-      // TODO: Implement derived value updates
     }
 
     // Move method definitions above their first use
@@ -86,11 +80,7 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
       }
     }
 
-    void _onStepCountError(error) {
-      // TODO: Handle step count error
-    }
   String _userName = '';
-  String _userAvatar = 'https://images.unsplash.com/photo-1705408115513-3ff15ef55a8d';
   int _userXP = 0;
   int _userLevel = 1;
   int _currentSteps = 0;
@@ -101,14 +91,13 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
   double _calories = 0.0;
   double _activeTime = 0.0;
   bool _healthPermissionsAvailable = false;
-  bool _isPedometerAvailable = false;
   List<dynamic> _todayAchievements = [];
   AnimationController? _fabAnimationController;
   Animation<double>? _fabAnimation;
   StreamSubscription? _stepCountSubscription;
   StreamSubscription? _connectivitySubscription;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
-  Stream<StepCount>? _stepCountStream;
+  // Stream<StepCount>? _stepCountStream;
 
   @override
   void initState() {
@@ -143,87 +132,22 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
     await prefs.setInt('user_xp', _userXP);
   }
 
-  Future<void> _checkHealthPermissions() async {
-    if (kIsWeb) {
-      // Web doesn't support pedometer, use manual entry
-      setState(() {
-        _healthPermissionsAvailable = false;
-      });
-    } else {
-      PermissionStatus status = await Permission.activityRecognition.request();
-      setState(() {
-        _healthPermissionsAvailable = status.isGranted;
-      });
-    }
-  }
-
-  void _initConnectivity() {
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen(_onConnectivityChanged);
-  }
-
-  void _onConnectivityChanged(List<ConnectivityResult> results) {
-    if (results.contains(ConnectivityResult.none)) {
-      // Offline mode: switch to manual entry
-      _stepCountSubscription?.cancel();
-      if (mounted) {
-        setState(() {
-          _healthPermissionsAvailable = false;
-          _isPedometerAvailable = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Offline mode: Manual step entry enabled'),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
-    } else {
-      // Online: try to enable pedometer if permissions available
-      if (_healthPermissionsAvailable && !kIsWeb) {
-        _initPedometer();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Online: Pedometer activated'),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
-    }
-  }
-
-  void _initPedometer() async {
-    if (_healthPermissionsAvailable && !kIsWeb) {
-      List<ConnectivityResult> results = await Connectivity().checkConnectivity();
-      if (!results.contains(ConnectivityResult.none)) {
-        _stepCountStream = Pedometer.stepCountStream;
-        _stepCountSubscription = _stepCountStream?.listen(
-          _onStepCount,
-          onError: _onStepCountError,
-          cancelOnError: true,
-        );
-        setState(() {
-          _isPedometerAvailable = true;
-        });
-      }
-    }
-  }
-
-  void _onStepCount(StepCount event) {
-    setState(() {
-      if (_initialSteps == 0) {
-        _initialSteps = event.steps;
-      }
-      int newSteps = event.steps - _initialSteps;
-      int stepsGained = newSteps - _currentSteps;
-      _currentSteps = newSteps;
-      if (stepsGained > 0) {
-        _userXP += (stepsGained / 10).round();
-        _checkLevelUp();
-      }
-      _updateDerivedValues();
-    });
-    _saveSteps();
-  }
+  // void _onStepCount(StepCount event) {
+  //   setState(() {
+  //     if (_initialSteps == 0) {
+  //       _initialSteps = event.steps;
+  //     }
+  //     int newSteps = event.steps - _initialSteps;
+  //     int stepsGained = newSteps - _currentSteps;
+  //     _currentSteps = newSteps;
+  //     if (stepsGained > 0) {
+  //       _userXP += (stepsGained / 10).round();
+  //       _checkLevelUp();
+  //     }
+  //     _updateDerivedValues();
+  //   });
+  //   _saveSteps();
+  // }
 
   @override
   Widget build(BuildContext context) {
