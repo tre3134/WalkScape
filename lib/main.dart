@@ -36,13 +36,7 @@ void main() async {
     return SizedBox.shrink();
   };
 
-  WidgetsFlutterBinding.ensureInitialized();
-await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
-runApp(MyApp(initialRoute: initialRoute));
 
-FirebaseDatabase database = FirebaseDatabase.instance;
 
   //  CRITICAL: Device orientation lock - DO NOT REMOVE
   Future.wait([
