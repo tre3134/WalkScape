@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "8082473065",
+    "project_id": "fitness-c3f28",
+    "storage_bucket": "fitness-c3f28.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8082473065:android:fb802554220b3edab822f8",
+        "android_client_info": {
+          "package_name": "com.example.walkscape"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_e8kuISbtYTS04ptgDaa-C34z0g3RKJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
