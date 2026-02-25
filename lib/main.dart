@@ -35,6 +35,12 @@ void main() async {
     return SizedBox.shrink();
   };
 
+  WidgetsFlutterBinding.ensureInitialized();
+await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
+runApp(const MyApp());
+
   //  CRITICAL: Device orientation lock - DO NOT REMOVE
   Future.wait([
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
