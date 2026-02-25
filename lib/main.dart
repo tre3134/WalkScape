@@ -10,12 +10,20 @@ import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
 
 void main() async {
+  
+  
   WidgetsFlutterBinding.ensureInitialized();
 
   // Check if profile is created
   final prefs = await SharedPreferences.getInstance();
   final profileCreated = prefs.getBool('profile_created') ?? false;
   final initialRoute = profileCreated ? homeDashboard : profileCreation;
+
+ /* await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);*/
+
+FirebaseDatabase database = FirebaseDatabase.instance;
 
   bool hasShownError = false;
 
@@ -35,13 +43,6 @@ void main() async {
     }
     return SizedBox.shrink();
   };
-
-WidgetsFlutterBinding.ensureInitialized();
-await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
-
-FirebaseDatabase database = FirebaseDatabase.instance;
 
   //  CRITICAL: Device orientation lock - DO NOT REMOVE
   Future.wait([
