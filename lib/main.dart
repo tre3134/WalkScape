@@ -21,9 +21,9 @@ void main() async {
 
  /* await Firebase.initializeApp(
   options: DefaultFirebaseOptions.currentPlatform,
-);*/
+);
 
-FirebaseDatabase database = FirebaseDatabase.instance;
+FirebaseDatabase database = FirebaseDatabase.instance;*/
 
   bool hasShownError = false;
 
