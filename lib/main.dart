@@ -4,6 +4,7 @@ import 'package:sizer/sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
@@ -39,7 +40,9 @@ void main() async {
 await Firebase.initializeApp(
   options: DefaultFirebaseOptions.currentPlatform,
 );
-runApp(const MyApp());
+runApp(MyApp(initialRoute: initialRoute));
+
+FirebaseDatabase database = FirebaseDatabase.instance;
 
   //  CRITICAL: Device orientation lock - DO NOT REMOVE
   Future.wait([
