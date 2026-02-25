@@ -14,16 +14,16 @@ void main() async {
   
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Check if profile is created
-  final prefs = await SharedPreferences.getInstance();
-  final profileCreated = prefs.getBool('profile_created') ?? false;
-  final initialRoute = profileCreated ? homeDashboard : profileCreation;
-
- /* await Firebase.initializeApp(
+   /* await Firebase.initializeApp(
   options: DefaultFirebaseOptions.currentPlatform,
 );
 
 FirebaseDatabase database = FirebaseDatabase.instance;*/
+
+  // Check if profile is created
+  final prefs = await SharedPreferences.getInstance();
+  final profileCreated = prefs.getBool('profile_created') ?? false;
+  final initialRoute = profileCreated ? homeDashboard : profileCreation;
 
   bool hasShownError = false;
 
