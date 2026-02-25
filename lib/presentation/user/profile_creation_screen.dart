@@ -58,10 +58,10 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
   ];
 
   @override
-  @override
   void initState() {
     super.initState();
-    _userDb = UserDatabase('user_db.json');
+    _userDb = UserDatabase();
+    _userDb.load();
   }
 
   @override
@@ -81,8 +81,10 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
     final email = _emailController.text.trim();
     final name = _nameController.text.trim();
 
+    await _userDb.load();
     // Check for unique username/email
     if (_userDb.usernameOrEmailExists(username, email)) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -97,7 +99,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
       final prefs = await SharedPreferences.getInstance();
 
       // Add to user database
-      _userDb.addUser(username, email, '');
+      await _userDb.addUser(username, email, '');
 
       await prefs.setString('user_username', username);
       await prefs.setString('user_email', email);
