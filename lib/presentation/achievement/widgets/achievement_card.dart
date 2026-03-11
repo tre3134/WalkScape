@@ -1,8 +1,42 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../core/app_export.dart';
+
+String getAchievementEmoji(String category) {
+  switch (category.toLowerCase()) {
+    case 'steps':
+      return '👣';
+    case 'streaks':
+      return '🔥';
+    case 'trails':
+      return '⛰️';
+    case 'social':
+      return '🤝';
+    case 'events':
+      return '🎊';
+    default:
+      return '🏅';
+  }
+}
+
+String getMotivationalMessage(String category) {
+  switch (category.toLowerCase()) {
+    case 'steps':
+      return 'Every step counts! Keep moving!';
+    case 'streaks':
+      return 'Keep your streak alive!';
+    case 'trails':
+      return 'Adventure awaits on the trail!';
+    case 'social':
+      return 'Invite friends for more fun!';
+    case 'events':
+      return 'Special event, special you!';
+    default:
+      return 'You are closer than you think!';
+  }
+}
 
 class AchievementCard extends StatelessWidget {
   final Map<String, dynamic> achievement;
@@ -21,6 +55,7 @@ class AchievementCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isEarned = achievement['isEarned'] as bool;
     final progress = achievement['progress'] as double? ?? 0.0;
+    final emoji = getAchievementEmoji(achievement['category'] as String);
 
     return GestureDetector(
       onTap: () {
@@ -33,35 +68,37 @@ class AchievementCard extends StatelessWidget {
               onLongPress!();
             }
           : null,
-      child: Card(
-        elevation: isEarned ? 4.0 : 1.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: BorderSide(
-            color: isEarned
-                ? theme.colorScheme.primary.withValues(alpha: 0.3)
-                : theme.colorScheme.outline.withValues(alpha: 0.2),
-            width: isEarned ? 2.0 : 1.0,
+      child: Stack(
+        children: [
+          Card(
+            elevation: isEarned ? 4.0 : 1.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(
+                color: isEarned
+                  ? theme.colorScheme.primary.withValues(alpha: 0.3)
+                  : theme.colorScheme.outline.withValues(alpha: 0.2),
+                width: isEarned ? 2.0 : 1.0,
+              ),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(3.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: isEarned
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          theme.colorScheme.primary.withValues(alpha: 0.05),
+                          theme.colorScheme.secondary.withValues(alpha: 0.05),
+                        ],
+                      )
+                    : null,
           ),
-        ),
-        child: Container(
-          padding: EdgeInsets.all(3.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            gradient: isEarned
-                ? LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      theme.colorScheme.primary.withValues(alpha: 0.05),
-                      theme.colorScheme.secondary.withValues(alpha: 0.05),
-                    ],
-                  )
-                : null,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
               // Badge Icon/Image
               Expanded(
                 flex: 3,
@@ -74,9 +111,9 @@ class AchievementCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isEarned
-                            ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                            : theme.colorScheme.onSurface
-                                .withValues(alpha: 0.1),
+                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                          : theme.colorScheme.onSurface
+                            .withValues(alpha: 0.1),
                       ),
                       child: isEarned
                           ? CustomImageWidget(
@@ -90,30 +127,21 @@ class AchievementCard extends StatelessWidget {
                           : CustomIconWidget(
                               iconName: 'lock_outline',
                               size: 8.w,
-                              color: theme.colorScheme.onSurface
+                                color: theme.colorScheme.onSurface
                                   .withValues(alpha: 0.4),
                             ),
                     ),
                     if (!isEarned && progress > 0)
                       Positioned(
                         bottom: 0,
-                        child: Container(
-                          width: 16.w,
-                          height: 0.5.h,
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 600),
+                          curve: Curves.easeInOut,
+                          width: 16.w * progress,
+                          height: 0.7.h,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2),
-                            color: theme.colorScheme.outline
-                                .withValues(alpha: 0.3),
-                          ),
-                          child: FractionallySizedBox(
-                            alignment: Alignment.centerLeft,
-                            widthFactor: progress,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(2),
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
+                            color: theme.colorScheme.primary.withValues(alpha: 0.7),
                           ),
                         ),
                       ),
@@ -143,17 +171,29 @@ class AchievementCard extends StatelessWidget {
               // Achievement Title
               Expanded(
                 flex: 1,
-                child: Text(
-                  achievement['title'] as String,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: isEarned
-                        ? theme.colorScheme.onSurface
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      emoji,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(width: 1.w),
+                    Flexible(
+                      child: Text(
+                        achievement['title'] as String,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                            color: isEarned
+                              ? theme.colorScheme.onSurface
+                              : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
@@ -161,8 +201,8 @@ class AchievementCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
                 decoration: BoxDecoration(
-                  color: _getCategoryColor(
-                          achievement['category'] as String, theme)
+                    color: _getCategoryColor(
+                        achievement['category'] as String, theme)
                       .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -184,10 +224,34 @@ class AchievementCard extends StatelessWidget {
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
+              ] else if (!isEarned) ...[
+                SizedBox(height: 0.5.h),
+                Text(
+                  getMotivationalMessage(achievement['category'] as String),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ],
             ],
           ),
-        ),
+            ),
+          ),
+          // Confetti celebration overlay for newly earned achievements (example, can be improved with animation package)
+          if (isEarned && (achievement['justUnlocked'] ?? false))
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Center(
+                  child: Text(
+                    '🎉',
+                    style: TextStyle(fontSize: 48),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

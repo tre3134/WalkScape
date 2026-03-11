@@ -358,7 +358,7 @@ class _AchievementGalleryState extends State<AchievementGallery>
     HapticFeedback.lightImpact();
     // Simulate checking for new achievements
     await Future.delayed(const Duration(seconds: 1));
-
+    if (!mounted) return;
     // Show celebration animation for newly earned achievements
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(

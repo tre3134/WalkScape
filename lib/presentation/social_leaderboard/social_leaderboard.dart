@@ -321,7 +321,7 @@ class _SocialLeaderboardState extends State<SocialLeaderboard>
       'Beginner Walker',
       'Rookie',
     ];
-    return titles[rank - 1] ?? 'Rookie';
+    return (rank - 1 < titles.length) ? titles[rank - 1] : 'Rookie';
   }
 
   Future<void> _refreshData() async {

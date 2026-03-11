@@ -2,17 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
 
 void main() async {
+  
+  
   WidgetsFlutterBinding.ensureInitialized();
+
+   /* await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
+
+FirebaseDatabase database = FirebaseDatabase.instance;*/
 
   // Check if profile is created
   final prefs = await SharedPreferences.getInstance();
   final profileCreated = prefs.getBool('profile_created') ?? false;
-  final initialRoute = profileCreated ? AppRoutes.homeDashboard : AppRoutes.profileCreation;
+  final initialRoute = profileCreated ? homeDashboard : profileCreation;
 
   bool hasShownError = false;
 
@@ -65,7 +76,7 @@ class MyApp extends StatelessWidget {
         },
         // 🚨 END CRITICAL SECTION
         debugShowCheckedModeBanner: false,
-        routes: AppRoutes.routes,
+        routes: routes,
         initialRoute: initialRoute,
       );
     });
