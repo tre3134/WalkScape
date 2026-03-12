@@ -825,11 +825,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   void _exportUserData() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content:
-              Text('Data export started. You will receive an email shortly.')),
-    );
+    // No error or info message
   }
 
   void _showUnitsOptions() {
@@ -950,92 +946,14 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   void _showAboutDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('About WalkScape'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Version: 1.0.0'),
-            SizedBox(height: 8),
-            Text('Build: 2025.11.06'),
-            SizedBox(height: 16),
-            Text('Transform your daily walks into epic adventures!'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Terms of Service'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Privacy Policy'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
+    // No dialog
   }
 
   void _showLogoutConfirmation() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text(
-            'Are you sure you want to logout? Your progress will be saved.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/splash-screen', (route) => false);
-            },
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
-    );
+    // No dialog
   }
 
   void _showDeleteAccountConfirmation() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Account'),
-        content: const Text(
-          'Are you sure you want to permanently delete your account? This action cannot be undone and all your progress will be lost.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('Account deletion request submitted.')),
-              );
-            },
-            child: const Text('Delete Account'),
-          ),
-        ],
-      ),
-    );
+    // No dialog
   }
 }

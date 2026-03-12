@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+
 import '../../../core/app_export.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class AvatarCustomizationModal extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -21,58 +24,10 @@ class AvatarCustomizationModal extends StatefulWidget {
 class _AvatarCustomizationModalState extends State<AvatarCustomizationModal>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  String selectedAvatar = '';
+  File? _selectedAvatarFile;
   String selectedTheme = '';
 
-  final List<Map<String, dynamic>> avatarOptions = [
-    {
-      "id": "avatar_1",
-      "imageUrl":
-          "https://images.unsplash.com/photo-1705408115513-3ff15ef55a8d",
-      "semanticLabel":
-          "Young woman with curly brown hair wearing a white t-shirt, smiling outdoors",
-      "unlocked": true,
-    },
-    {
-      "id": "avatar_2",
-      "imageUrl":
-          "https://img.rocket.new/generatedImages/rocket_gen_img_1f01089fb-1762273740576.png",
-      "semanticLabel":
-          "Professional man with short dark hair wearing a navy blue suit jacket",
-      "unlocked": true,
-    },
-    {
-      "id": "avatar_3",
-      "imageUrl":
-          "https://images.unsplash.com/photo-1733077151455-113715b5a4be",
-      "semanticLabel":
-          "Athletic woman with blonde hair in ponytail wearing workout clothes",
-      "unlocked": false,
-    },
-    {
-      "id": "avatar_4",
-      "imageUrl":
-          "https://images.unsplash.com/photo-1609126110613-fc7adf59f543",
-      "semanticLabel": "Bearded man with glasses wearing a casual gray sweater",
-      "unlocked": true,
-    },
-    {
-      "id": "avatar_5",
-      "imageUrl":
-          "https://images.unsplash.com/photo-1505669845733-1aa234f696b1",
-      "semanticLabel":
-          "Young woman with long dark hair wearing a red top, smiling",
-      "unlocked": false,
-    },
-    {
-      "id": "avatar_6",
-      "imageUrl":
-          "https://images.unsplash.com/photo-1616641610572-8b4560e60fb1",
-      "semanticLabel":
-          "Man with short brown hair wearing a black t-shirt outdoors",
-      "unlocked": true,
-    },
-  ];
+  final ImagePicker _picker = ImagePicker();
 
   final List<Map<String, dynamic>> themeOptions = [
     {
@@ -116,10 +71,11 @@ class _AvatarCustomizationModalState extends State<AvatarCustomizationModal>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    selectedAvatar =
-        widget.userData["currentAvatarId"] as String? ?? "avatar_1";
-    selectedTheme =
-        widget.userData["currentThemeId"] as String? ?? "forest_trail";
+    selectedTheme = widget.userData["currentThemeId"] as String? ?? "forest_trail";
+    // Load existing avatar if present
+    if (widget.userData["avatarFilePath"] != null) {
+      _selectedAvatarFile = File(widget.userData["avatarFilePath"]);
+    }
   }
 
   @override
@@ -208,99 +164,34 @@ class _AvatarCustomizationModalState extends State<AvatarCustomizationModal>
 
   Widget _buildAvatarTab(BuildContext context) {
     final theme = Theme.of(context);
-
     return Padding(
       padding: EdgeInsets.all(4.w),
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 4.w,
-          mainAxisSpacing: 2.h,
-          childAspectRatio: 0.8,
-        ),
-        itemCount: avatarOptions.length,
-        itemBuilder: (context, index) {
-          final avatar = avatarOptions[index];
-          final isSelected = selectedAvatar == avatar["id"];
-          final isUnlocked = avatar["unlocked"] as bool;
-
-          return GestureDetector(
-            onTap: isUnlocked
-                ? () => setState(() => selectedAvatar = avatar["id"] as String)
-                : null,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isSelected
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.outline.withValues(alpha: 0.3),
-                  width: isSelected ? 3 : 1,
+      child: Column(
+        children: [
+          _selectedAvatarFile != null
+              ? CircleAvatar(
+                  radius: 48,
+                  backgroundImage: FileImage(_selectedAvatarFile!),
+                )
+              : CircleAvatar(
+                  radius: 48,
+                  backgroundColor: theme.colorScheme.primary.withOpacity(0.2),
+                  child: Icon(Icons.person, size: 48, color: theme.colorScheme.primary),
                 ),
-              ),
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(11),
-                    child: CustomImageWidget(
-                      imageUrl: avatar["imageUrl"] as String,
-                      width: double.infinity,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      semanticLabel: avatar["semanticLabel"] as String,
-                    ),
-                  ),
-                  if (!isUnlocked)
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.6),
-                        borderRadius: BorderRadius.circular(11),
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomIconWidget(
-                              iconName: 'lock',
-                              color: Colors.white,
-                              size: 8.w,
-                            ),
-                            SizedBox(height: 1.h),
-                            Text(
-                              'Unlock at\nLevel 15',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  if (isSelected && isUnlocked)
-                    Positioned(
-                      top: 2.w,
-                      right: 2.w,
-                      child: Container(
-                        width: 6.w,
-                        height: 6.w,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
-                          shape: BoxShape.circle,
-                        ),
-                        child: CustomIconWidget(
-                          iconName: 'check',
-                          color: theme.colorScheme.onPrimary,
-                          size: 4.w,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          );
-        },
+          SizedBox(height: 16),
+          ElevatedButton.icon(
+            icon: Icon(Icons.upload),
+            label: Text('Upload Photo'),
+            onPressed: () async {
+              final picked = await _picker.pickImage(source: ImageSource.gallery);
+              if (picked != null) {
+                setState(() {
+                  _selectedAvatarFile = File(picked.path);
+                });
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -431,22 +322,15 @@ class _AvatarCustomizationModalState extends State<AvatarCustomizationModal>
   }
 
   void _saveChanges() {
-    final selectedAvatarData = avatarOptions.firstWhere(
-      (avatar) => avatar["id"] == selectedAvatar,
-    );
     final selectedThemeData = themeOptions.firstWhere(
       (theme) => theme["id"] == selectedTheme,
     );
-
     final updatedData = {
       ...widget.userData,
-      "avatar": selectedAvatarData["imageUrl"],
-      "avatarSemanticLabel": selectedAvatarData["semanticLabel"],
-      "currentAvatarId": selectedAvatar,
+      if (_selectedAvatarFile != null) "avatarFilePath": _selectedAvatarFile!.path,
       "currentThemeId": selectedTheme,
       "currentThemeName": selectedThemeData["name"],
     };
-
     widget.onAvatarUpdate(updatedData);
     Navigator.pop(context);
   }

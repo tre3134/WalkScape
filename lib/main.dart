@@ -22,26 +22,9 @@ FirebaseDatabase database = FirebaseDatabase.instance;*/
   final profileCreated = prefs.getBool('profile_created') ?? false;
   final initialRoute = profileCreated ? homeDashboard : profileCreation;
 
-  bool hasShownError = false;
+  // No error widget logic
 
-  //  CRITICAL: Custom error handling - DO NOT REMOVE
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    if (!hasShownError) {
-      hasShownError = true;
-
-      // Reset flag after 3 seconds to allow error widget on new screens
-      Future.delayed(Duration(seconds: 5), () {
-        hasShownError = false;
-      });
-
-      return CustomErrorWidget(
-        errorDetails: details,
-      );
-    }
-    return SizedBox.shrink();
-  };
-
-  //  CRITICAL: Device orientation lock - DO NOT REMOVE
+  // Device orientation lock
   Future.wait([
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
   ]).then((value) {

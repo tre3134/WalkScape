@@ -56,13 +56,14 @@ class ProfileHeaderWidget extends StatelessWidget {
                     ],
                   ),
                   child: ClipOval(
-                    child: CustomImageWidget(
-                      imageUrl: userData["avatar"] as String,
-                      width: 25.w,
-                      height: 25.w,
-                      fit: BoxFit.cover,
-                      semanticLabel: userData["avatarSemanticLabel"] as String,
-                    ),
+                    child: userData["avatarFilePath"] != null
+                        ? Image.file(
+                            File(userData["avatarFilePath"]),
+                            width: 25.w,
+                            height: 25.w,
+                            fit: BoxFit.cover,
+                          )
+                        : Icon(Icons.person, size: 25.w, color: theme.colorScheme.primary),
                   ),
                 ),
               ),

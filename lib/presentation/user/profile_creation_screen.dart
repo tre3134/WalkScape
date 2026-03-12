@@ -86,12 +86,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
     if (_userDb.usernameOrEmailExists(username, email)) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Username or email already in use.'),
-          backgroundColor: Colors.red,
-        ),
-      );
+        // No error message
       return;
     }
 
@@ -116,12 +111,7 @@ class _ProfileCreationScreenState extends State<ProfileCreationScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to create profile: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+          // No error message
       }
     } finally {
       if (mounted) {
