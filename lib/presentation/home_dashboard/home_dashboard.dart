@@ -14,6 +14,7 @@ import './widgets/progress_ring_widget.dart';
 import './widgets/quick_stats_widget.dart';
 import './widgets/step_entry_modal_widget.dart';
 import './widgets/trail_map_widget.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class HomeDashboard extends StatefulWidget {
   const HomeDashboard({super.key});
@@ -99,6 +100,8 @@ class _HomeDashboardState extends State<HomeDashboard> with TickerProviderStateM
   StreamSubscription? _connectivitySubscription;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   // Stream<StepCount>? _stepCountStream;
+
+
 
   @override
   void initState() {

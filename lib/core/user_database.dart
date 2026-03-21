@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 
 class UserDatabase {
@@ -9,6 +10,13 @@ class UserDatabase {
   UserDatabase([String? _]) {
     _users = {};
   }
+
+  /*FirebaseDatabase database = FirebaseDatabase.instance;
+  await ref.set({
+    "username" : ,
+    "Email" : ,
+    "Password" : ,
+  });*/
 
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
